@@ -1,0 +1,7 @@
+# Data Observability Platform Dependencies
+# Data Observability & Reliability Rules: Production-grade libraries
+
+psycopg2-binary==2.9.7
+PyYAML==6.0.1
+termcolor==2.4.0
+python-dotenv==1.0.0

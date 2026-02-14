@@ -1,0 +1,112 @@
+# CDC Order Data Contract
+# Data Observability & Reliability Rules: YAML-based schema definitions for strict validation
+
+contract_name: "cdc_order_contract"
+version: "1.0"
+description: "Schema contract for CDC order data to prevent silent schema drift"
+
+target_table: "dim_orders_history"
+validation_mode: "strict"  # strict, lenient
+
+# Required fields with type definitions
+required_fields:
+  order_key:
+    type: "string"
+    description: "Unique order identifier"
+    nullable: false
+    constraints:
+      min_length: 1
+      max_length: 100
+      pattern: "^[A-Za-z0-9-_]+$"
+    
+  total_amount:
+    type: "float"
+    description: "Total order amount"
+    nullable: false
+    constraints:
+      min_value: 0.0
+      max_value: 999999.99
+      precision: 2
+
+# Optional fields for monitoring
+optional_fields:
+  customer_id:
+    type: "integer"
+    description: "Customer identifier"
+    nullable: true
+    
+  product_id:
+    type: "integer"
+    description: "Product identifier"
+    nullable: true
+    
+  quantity:
+    type: "integer"
+    description: "Order quantity"
+    nullable: true
+    constraints:
+      min_value: 1
+    
+  unit_price:
+    type: "float"
+    description: "Unit price"
+    nullable: true
+    constraints:
+      min_value: 0.0
+      precision: 2
+    
+  order_status:
+    type: "string"
+    description: "Order status"
+    nullable: true
+    constraints:
+      allowed_values: ["pending", "completed", "shipped", "cancelled", "refunded"]
+    
+  order_date:
+    type: "datetime"
+    description: "Order timestamp"
+    nullable: true
+    
+  cdc_operation:
+    type: "string"
+    description: "CDC operation type"
+    nullable: true
+    constraints:
+      allowed_values: ["INSERT", "UPDATE", "DELETE"]
+    
+  cdc_timestamp:
+    type: "datetime"
+    description: "CDC operation timestamp"
+    nullable: true
+
+# Validation rules
+validation_rules:
+  # Type validation settings
+  type_validation:
+    strict_mode: true  # Reject on type mismatch
+    coerce_types: false  # Don't attempt type coercion
+    
+  # Schema drift detection
+  schema_drift:
+    detect_new_fields: true  # Alert on unexpected new fields
+    detect_missing_fields: true  # Alert on missing required fields
+    detect_type_changes: true  # Alert on type changes
+    
+  # Data quality rules
+  data_quality:
+    check_null_constraints: true
+    check_value_constraints: true
+    check_pattern_constraints: true
+
+# Alerting configuration
+alerting:
+  contract_violation_severity: "CRITICAL"
+  log_to_database: true
+  log_to_console: true
+  include_sample_data: false  # Don't include actual data in alerts for security
+
+# Sampling configuration
+sampling:
+  enabled: true
+  sample_size: 100  # Number of records to validate per run
+  sampling_method: "random"  # random, sequential, latest

@@ -1,0 +1,119 @@
+# Data Observability Platform - .gitignore
+# Ensures clean version control by excluding temporary and sensitive files
+
+# Environment and configuration
+.env
+.env.local
+.env.production
+.env.staging
+config/secrets.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and runtime files
+logs/
+*.log
+*.log.*
+nohup.out
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Monitoring outputs
+data_health_scorecard.md
+detection_summary.md
+contract_validation_report.md
+PORTFOLIO_HEALTH_REPORT.md
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Docker
+.dockerignore
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Certificates and keys
+*.pem
+*.key
+*.crt
+*.p12
+
+# Local development
+local/
+dev/
+development/
+
+# Performance profiling
+*.prof
+*.profile

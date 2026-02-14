@@ -1,0 +1,27 @@
+# Database Configuration for Multi-Source Profiler
+# Data Observability & Reliability Rules: Use YAML-based schema definitions
+
+databases:
+  batch_analytics_db:
+    name: "analytics_db"
+    description: "Batch Analytics DB for fact_orders in marts schema"
+    connection_string: "postgresql://airflow:airflow@localhost:5432/analytics_db"
+    type: "postgresql"
+    timeout: 30
+    schema: "marts"
+    
+  cdc_history_db:
+    name: "warehouse_db" 
+    description: "CDC History DB for dim_orders_history and monitoring"
+    connection_string: "postgresql://postgres:postgres@localhost:5433/warehouse_db"
+    type: "postgresql"
+    timeout: 30
+    schema: "public"
+
+monitoring:
+  baselines_table: "monitoring.baselines"
+  retention_days: 90
+  
+logging:
+  level: "INFO"
+  format: "structured"
