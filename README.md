@@ -2,65 +2,46 @@
 
 A configuration-driven data observability engine that detects statistical anomalies based on dynamic historical baselines and generates actionable alerts, suitable for integration into CI/CD reliability pipelines.
 
-## Overview
+## Project Overview
 
-A data reliability and observability engine designed to detect anomalies, manage alert thresholds, and produce actionable insights for data pipelines. This platform provides enterprise-grade monitoring capabilities with statistical intelligence, preventing silent failures in production data ecosystems.
+In distributed systems, **silent data failures** are the most dangerous threat to data reliability. Unlike application errors that immediately surface, data quality issues can propagate undetected for days, corrupting downstream analytics, ML models, and business decisions before anyone notices.
 
 ### Why Observability Matters
 
-Modern data pipelines suffer from **silent failures** that go undetected until business impact occurs:
-- **Data Pipeline Breaks**: ETL failures without alerting mechanisms
-- **Schema Drift**: Unexpected structural changes breaking downstream processes  
-- **Stale Data**: Outdated information affecting critical business decisions
-- **Volume Anomalies**: Sudden drops or spikes indicating system issues
-- **No Centralized Visibility**: Fragmented monitoring across disparate systems
+Modern data ecosystems face critical challenges:
 
-The Data Observability Platform addresses these challenges through **statistical intelligence** and **proactive monitoring**, transforming reactive incident response into preventive data quality management.
+- **Silent Pipeline Failures**: ETL jobs succeed but deliver empty or corrupted data
+- **Schema Drift**: Source systems change structure without notification, breaking downstream consumers
+- **Stale Data**: Real-time dashboards show outdated information, leading to poor business decisions
+- **Volume Anomalies**: Sudden drops in data volume indicate upstream system failures
+- **Quality Degradation**: Data quality slowly degrades over time, making detection difficult
+
+### This Platform's Solution
+
+The Data Observability Platform implements **statistical intelligence** to detect these issues automatically:
+
+1. **Dynamic Baselines**: Continuously calculates historical baselines (mean, standard deviation) for each metric
+2. **Z-Score Anomaly Detection**: Identifies statistically significant deviations (3σ threshold)
+3. **Intelligent Alerting**: Prevents alert fatigue through deduplication and contextual enrichment
+4. **Contract Validation**: Enforces data contracts to catch schema drift before it impacts consumers
+5. **Executive Reporting**: Translates technical metrics into business impact language
+
+### Real-World Impact
+
+This isn't just a demo—it addresses actual production challenges:
+
+- **E-commerce**: Detects order processing failures before revenue loss
+- **Financial Services**: Ensures regulatory reporting data integrity
+- **Healthcare**: Maintains patient data quality for critical systems
+- **Analytics Platforms**: Guarantees ML model training data reliability
+
+The platform transforms **reactive incident response** (users reporting broken dashboards) into **proactive data quality management** (detecting issues before they cause impact).
 
 ## Architecture
 
-```mermaid
-graph TB
-    subgraph "Data Sources Layer"
-        A[Batch Analytics DB<br/>fact_orders]
-        B[CDC History DB<br/>dim_orders_history]
-        C[Real-time Streams<br/>JSON logs]
-    end
-    
-    subgraph "Processing Layer"
-        D[Multi-Source Profiler<br/>Baseline Calculation]
-        E[Statistical Anomaly Engine<br/>Z-Score Detection]
-        F[Contract Validation Guard<br/>Schema Enforcement]
-        G[Alert Deduplication<br/>Idempotent Storage]
-    end
-    
-    subgraph "Storage Layer"
-        H[Monitoring Database<br/>PostgreSQL]
-        I[Baseline Storage<br/>Historical Statistics]
-        J[Alert Management<br/>Unique Violations]
-    end
-    
-    subgraph "Output Layer"
-        K[Portfolio Health Scorecard<br/>Executive Metrics]
-        L[Real-time Alerts<br/>Webhooks/Email]
-        M[Compliance Reports<br/>Audit Trail]
-    end
-    
-    A --> D
-    B --> D
-    C --> F
-    D --> H
-    D --> I
-    E --> H
-    E --> J
-    F --> H
-    F --> J
-    G --> J
-    H --> K
-    I --> K
-    J --> L
-    J --> M
-```
+![Architecture Diagram](docs/architecture.md)
+
+*View the complete [architecture diagram](docs/architecture.md) for detailed system flow visualization*
 
 ### System Flow
 
@@ -91,38 +72,103 @@ graph TB
 - **Monitoring**: Structured logging with colored console output
 - **Testing**: Chaos engineering test suites
 
-## Setup and Installation
+## Complete Setup & Run Guide
 
 ### Prerequisites
 - Python 3.8+
 - PostgreSQL 12+
 - Docker (optional, for containerized deployment)
 
-### Quick Start
+### Step 1: Clone Repository
 ```bash
-# Clone the repository
 git clone https://github.com/mrohitth/data-observability-platform.git
 cd data-observability-platform
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your database credentials
-
-# Initialize monitoring schema
-python scripts/setup_monitoring.py
-
-# Run full observability pipeline
-python src/observability_engine.py
 ```
 
-### Docker Deployment
+### Step 2: Install Dependencies
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Verify installation
+python -c "import psycopg2, yaml, pandas; print('✅ Dependencies installed successfully')"
+```
+
+### Step 3: Configure Environment
+```bash
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your database credentials
+# Required variables:
+# - BATCH_DB_HOST: PostgreSQL host for batch analytics
+# - CDC_DB_HOST: PostgreSQL host for CDC data
+# - BATCH_DB_NAME, CDC_DB_NAME: Database names
+# - BATCH_DB_USER, CDC_DB_USER: Database users
+# - BATCH_DB_PASSWORD, CDC_DB_PASSWORD: Database passwords
+```
+
+### Step 4: Initialize Database Schema
+```bash
+# Create monitoring tables and indexes
+python scripts/setup_monitoring.py
+
+# Expected output:
+# ✅ Database schema initialized successfully
+# 📊 Created monitoring tables: baselines, alerts, contract_violations
+# 🔧 Created indexes for performance optimization
+```
+
+### Step 5: Run Full Pipeline
+```bash
+# Option 1: Run complete observability pipeline
+python src/observability_engine.py
+
+# Option 2: Use Makefile commands
+make run-orchestrator
+
+# Expected output:
+# 🔍 Data Observability Engine Starting...
+# ============================================================
+# 📊 Running profiler to establish baselines...
+# ✅ Baselines calculated for 3 metrics
+# 🔍 Running anomaly detection...
+# 🚨 1 anomaly detected (volume drop)
+# 📋 Running contract validation...
+# ✅ All contracts validated successfully
+# 📄 Portfolio health report generated
+# ✅ Pipeline completed in 2.3 seconds
+```
+
+### Step 6: Verify Results
+```bash
+# Check generated reports
+ls -la PORTFOLIO_HEALTH_REPORT.md
+
+# View alert details
+echo "SELECT * FROM alerts;" | psql $BATCH_DB_CONNECTION_STRING
+
+# Expected: 1 alert record with volume anomaly details
+```
+
+### Step 7: Run Tests (Optional)
+```bash
+# Test core functionality
+python tests/test_core_functionality.py
+
+# Expected output:
+# 🧪 Running Data Observability Platform Core Tests
+# ============================================================
+# ✅ All tests passed! Core functionality validated.
+```
+
+### Docker Alternative
 ```bash
 # Build and run container
 docker build -t data-observability-platform .
 docker run -e BATCH_DB_HOST=your_db_host data-observability-platform
+
+# Expected: Container starts and runs full pipeline
 ```
 
 ## Example Usage
@@ -206,6 +252,167 @@ ADDITIONAL DETAILS:
 ================================================================================
 ```
 
+## Example Input/Output
+
+### Example Metric Input
+
+**Batch Analytics Data** (`fact_orders` table):
+```sql
+SELECT 
+    order_date,
+    COUNT(*) as daily_orders,
+    SUM(total_amount) as daily_revenue,
+    AVG(total_amount) as avg_order_value
+FROM fact_orders 
+WHERE order_date >= CURRENT_DATE - INTERVAL '30 days'
+GROUP BY order_date
+ORDER BY order_date DESC;
+```
+
+**Sample Output**:
+```
+order_date  | daily_orders | daily_revenue | avg_order_value
+------------+--------------+---------------+----------------
+2024-01-17  |          342 |      12345.67 |           36.09
+2024-01-16  |         1456 |      52345.89 |           35.97
+2024-01-15  |         1289 |      46234.56 |           35.86
+...
+```
+
+**CDC Stream Data** (`dim_orders_history` table):
+```json
+{
+  "order_key": "ORD-2024-001234",
+  "customer_id": "CUST-789",
+  "product_id": "PROD-456",
+  "quantity": 2,
+  "unit_price": 29.99,
+  "total_amount": 59.98,
+  "order_status": "completed",
+  "order_date": "2024-01-17T10:30:00Z",
+  "cdc_operation": "INSERT",
+  "cdc_timestamp": "2024-01-17T10:30:15Z"
+}
+```
+
+### Output Anomaly Report
+
+**Real-time Alert Output**:
+```
+================================================================================
+🚨 CRITICAL DATA RELIABILITY ALERT 🚨
+================================================================================
+Alert Type: VOLUME_ANOMALY
+Severity: CRITICAL
+Description: Daily order volume dropped by 4.2 standard deviations
+Source: Batch Analytics DB - fact_orders
+Timestamp: 2024-01-17 09:15:30 UTC
+
+METRIC DETAILS:
+  • Current Volume: 342 orders
+  • Expected Range: 1,150-1,350 orders
+  • Z-Score: -4.2
+  • Baseline Period: 2024-01-01 to 2024-01-14
+  • Historical Mean: 1,289 orders
+  • Historical StdDev: 89 orders
+
+BUSINESS IMPACT:
+  • Estimated Revenue Impact: ~$45,000 daily
+  • Customer Experience: Potential order processing delays
+  • Recommended Action: Immediate ETL pipeline investigation
+  • Escalation: Notify operations team within 15 minutes
+
+SYSTEM CONTEXT:
+  • Alert ID: ALT-001
+  • Deduplication Key: volume_anomaly_fact_orders_2024-01-17
+  • First Detection: 2024-01-17 09:15:30 UTC
+  • Last Updated: 2024-01-17 09:15:30 UTC
+================================================================================
+```
+
+**Portfolio Health Report**:
+```markdown
+# 🛡️ Data Observability Platform Portfolio Health Report
+
+*Generated: 2024-01-17 12:00:00 UTC*
+
+## 📊 Executive Summary
+**Overall Platform Status: 🟡 ATTENTION**
+**Platform Reliability Score: 87.3%**
+
+### Component Health Status
+- **Batch Layer**: 🟡 ATTENTION (82.1% reliability)
+- **CDC Layer**: 🟡 ATTENTION (78.9% reliability)
+- **Contract Status**: 🔴 CRITICAL (65.4% compliance)
+
+### Critical Alerts (24h)
+- **Volume Anomaly**: Daily orders dropped to 342 (expected: 1,150-1,350)
+- **Freshness Anomaly**: CDC data 45 minutes stale
+- **Contract Violation**: total_amount field type mismatch
+
+### Immediate Actions Required
+1. **Investigate Volume Drop**: Check ETL pipeline status
+2. **Address Stale CDC Data**: Restart streaming processes
+3. **Fix Contract Violation**: Review transformation logic
+
+### Performance Metrics
+| Metric | Current | Baseline | Deviation |
+|--------|---------|----------|-----------|
+| Daily Orders | 342 | 1,289 ± 89 | -4.2σ |
+| Hourly CDC Rate | 12 | 46 ± 12 | -2.8σ |
+| Avg Order Value | $36.09 | $35.97 ± 1.2 | +0.1σ |
+
+*Next scheduled report: 2024-01-17 13:00:00 UTC*
+```
+
+### Config Interpretation Example
+
+**Database Configuration** (`observability_configs/databases.yaml`):
+```yaml
+batch_analytics_db:
+  name: "Batch Analytics Database"
+  connection_string: "postgresql://user:pass@host:5432/analytics"
+  schema: "marts"
+  tables:
+    - name: "fact_orders"
+      metrics:
+        - name: "daily_order_count"
+          type: "volume"
+          threshold: 3.0
+        - name: "daily_revenue"
+          type: "volume"
+          threshold: 2.5
+```
+
+**Interpretation**:
+- Monitors `fact_orders` table in the `marts` schema
+- Tracks `daily_order_count` with 3.0 Z-score threshold (critical)
+- Tracks `daily_revenue` with 2.5 Z-score threshold (warning)
+- Any deviation beyond these thresholds triggers alerts
+
+**Contract Configuration** (`contracts/cdc_order_contract.yaml`):
+```yaml
+fields:
+  order_key:
+    type: "String"
+    required: true
+    max_length: 50
+  total_amount:
+    type: "Float"
+    required: true
+    min_value: 0.0
+  quantity:
+    type: "Integer"
+    required: true
+    min_value: 1
+```
+
+**Interpretation**:
+- `order_key` must be string, required, max 50 characters
+- `total_amount` must be positive float, required
+- `quantity` must be integer ≥ 1, required
+- Any violation triggers contract violation alerts
+
 ## How It Works
 
 ### Anomaly Detection Process
@@ -237,34 +444,114 @@ ADDITIONAL DETAILS:
 - Seasonal pattern recognition for business cycles
 - Automatic threshold adjustment based on data volatility
 
-## Configuration File Breakdown
+## Configuration Explanation
 
-### Database Configuration (`config/databases.yaml`)
+### Database Configuration (`observability_configs/databases.yaml`)
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| `name` | Database identifier | `batch_analytics_db` |
-| `connection_string` | PostgreSQL connection URI | `postgresql://user:pass@host:5432/db` |
-| `schema` | Target schema name | `marts` or `public` |
-| `tables` | Monitored tables list | `["fact_orders", "dim_customers"]` |
+| `name` | Human-readable database identifier | `"Batch Analytics Database"` |
+| `connection_string` | PostgreSQL connection URI | `"postgresql://user:pass@host:5432/db"` |
+| `schema` | Target schema name | `"marts"` or `"public"` |
+| `tables` | List of monitored tables | `["fact_orders", "dim_customers"]` |
+| `tables[].name` | Table name to monitor | `"fact_orders"` |
+| `tables[].metrics` | Metrics to track for this table | See below |
+| `tables[].metrics[].name` | Metric identifier | `"daily_order_count"` |
+| `tables[].metrics[].type` | Metric type (volume/freshness) | `"volume"` |
+| `tables[].metrics[].threshold` | Z-score threshold for alerts | `3.0` |
+| `tables[].metrics[].window_days` | Lookback period for baseline | `30` |
+
+**Example Configuration**:
+```yaml
+batch_analytics_db:
+  name: "Batch Analytics Database"
+  connection_string: "postgresql://user:pass@host:5432/analytics"
+  schema: "marts"
+  tables:
+    - name: "fact_orders"
+      metrics:
+        - name: "daily_order_count"
+          type: "volume"
+          threshold: 3.0
+          window_days: 30
+        - name: "daily_revenue"
+          type: "volume"
+          threshold: 2.5
+          window_days: 30
+```
 
 ### Contract Configuration (`contracts/cdc_order_contract.yaml`)
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| `field_name` | Column name to validate | `order_key` |
-| `field_type` | Expected data type | `String` |
-| `constraints` | Validation rules | `{"max_length": 50, "required": true}` |
-| `description` | Business purpose | "Unique order identifier" |
+| `fields` | Object defining field validations | See below |
+| `fields[].type` | Expected data type | `"String"`, `"Integer"`, `"Float"` |
+| `fields[].required` | Whether field must be present | `true` or `false` |
+| `fields[].max_length` | Maximum string length | `50` |
+| `fields[].min_value` | Minimum numeric value | `0.0` |
+| `fields[].max_value` | Maximum numeric value | `999999.99` |
+| `fields[].allowed_values` | List of allowed values | `["active", "inactive"]` |
+| `fields[].pattern` | Regex pattern for validation | `"^[A-Z]{2}-\d{6}$"` |
+
+**Example Configuration**:
+```yaml
+fields:
+  order_key:
+    type: "String"
+    required: true
+    max_length: 50
+    pattern: "^[A-Z]{3}-\\d{6}$"
+  total_amount:
+    type: "Float"
+    required: true
+    min_value: 0.0
+    max_value: 999999.99
+  quantity:
+    type: "Integer"
+    required: true
+    min_value: 1
+    max_value: 1000
+  order_status:
+    type: "String"
+    required: true
+    allowed_values: ["pending", "processing", "shipped", "completed", "cancelled"]
+```
 
 ### Environment Configuration (`.env`)
 
-| Field | Description | Default |
-|-------|-------------|---------|
-| `VOLUME_ANOMALY_THRESHOLD` | Z-score threshold for volume alerts | `3.0` |
-| `FRESHNESS_THRESHOLD_MINUTES` | Staleness limit in minutes | `30` |
-| `SAMPLING_SIZE` | Records to sample for validation | `100` |
-| `CONCURRENT_WORKERS` | Parallel processing threads | `4` |
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `BATCH_DB_HOST` | PostgreSQL host for batch analytics | `localhost` |
+| `BATCH_DB_PORT` | PostgreSQL port for batch analytics | `5432` |
+| `BATCH_DB_NAME` | Database name for batch analytics | `analytics` |
+| `BATCH_DB_USER` | Database user for batch analytics | `postgres` |
+| `BATCH_DB_PASSWORD` | Database password for batch analytics | Required |
+| `CDC_DB_HOST` | PostgreSQL host for CDC data | `localhost` |
+| `CDC_DB_PORT` | PostgreSQL port for CDC data | `5432` |
+| `CDC_DB_NAME` | Database name for CDC data | `cdc_history` |
+| `CDC_DB_USER` | Database user for CDC data | `postgres` |
+| `CDC_DB_PASSWORD` | Database password for CDC data | Required |
+| `LOG_LEVEL` | Logging verbosity | `INFO` |
+| `ALERT_WEBHOOK_URL` | Webhook URL for alerts | Optional |
+| `ALERT_EMAIL_RECIPIENTS` | Email recipients for alerts | Optional |
+
+### Threshold Configuration
+
+| Metric | Threshold | Alert Severity | Description |
+|--------|-----------|---------------|-------------|
+| `VOLUME_ANOMALY_THRESHOLD` | `3.0` | CRITICAL | Z-score for volume anomalies |
+| `FRESHNESS_THRESHOLD_MINUTES` | `30` | WARNING | Staleness limit in minutes |
+| `SAMPLING_SIZE` | `100` | INFO | Records to sample for validation |
+| `CONCURRENT_WORKERS` | `4` | INFO | Parallel processing threads |
+| `BASELINE_WINDOW_DAYS` | `30` | INFO | Lookback period for baselines |
+| `MIN_SAMPLE_SIZE` | `10` | WARNING | Minimum data points for baseline |
+
+**Threshold Interpretation**:
+- **Z-Score 3.0+**: Critical anomaly (99.7% confidence)
+- **Z-Score 2.0-2.9**: Warning anomaly (95% confidence)
+- **Z-Score 1.0-1.9**: Info anomaly (68% confidence)
+- **Freshness**: Data older than threshold triggers warning
+- **Sample Size**: Insufficient data triggers warning alert
 
 ## Development / Running Locally
 
