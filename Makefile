@@ -36,10 +36,11 @@ setup:
 	python scripts/setup_monitoring.py
 
 test:
-	@echo "Running chaos engineering tests..."
+	@echo "Running all tests including chaos engineering..."
 	python tests/chaos_volume.py
 	python tests/chaos_freshness.py
 	python tests/chaos_contract.py
+	python tests/test_core_functionality.py
 
 # Development Commands
 run-profiler:
@@ -56,11 +57,11 @@ run-contract:
 
 run-orchestrator:
 	@echo "Running full pipeline..."
-	python src/orchestrator.py
+	python src/observability_engine.py
 
 run-production:
 	@echo "Running production-hardened pipeline..."
-	python src/production_orchestrator.py
+	python src/production_observability_engine.py
 
 scorecard:
 	@echo "Generating portfolio health report..."

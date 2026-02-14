@@ -298,7 +298,7 @@ class ContractGuard:
     Reliability First: Comprehensive validation with database logging
     """
     
-    def __init__(self, config_path: str = "config/databases.yaml", 
+    def __init__(self, config_path: str = "observability_configs/databases.yaml", 
                  contract_path: str = "contracts/cdc_order_contract.yaml"):
         self.logger = self._setup_logger()
         self.config = self._load_config(config_path)

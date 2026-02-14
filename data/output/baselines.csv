@@ -1,0 +1,4 @@
+metric_name,source_database,table_name,mean_value,std_deviation,sample_size,calculation_timestamp
+daily_order_count,batch_analytics_db,fact_orders,1289.45,89.23,30,2024-01-17 08:00:00 UTC
+hourly_cdc_rate,cdc_history_db,dim_orders_history,45.67,12.34,720,2024-01-17 08:00:00 UTC
+avg_order_value,batch_analytics_db,fact_orders,35.97,1.23,30,2024-01-17 08:00:00 UTC

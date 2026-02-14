@@ -86,7 +86,7 @@ class DatabaseConnection:
 class MetricsProfiler:
     """Multi-source metrics profiler for data observability"""
     
-    def __init__(self, config_path: str = "config/databases.yaml"):
+    def __init__(self, config_path: str = "observability_configs/databases.yaml"):
         self.config = self._load_config(config_path)
         self.logger = self._setup_logger()
         self.batch_db = None

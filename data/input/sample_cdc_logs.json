@@ -1,0 +1,62 @@
+[
+  {
+    "order_key": "ORD-2024-001234",
+    "customer_id": "CUST-789",
+    "product_id": "PROD-456",
+    "quantity": 2,
+    "unit_price": 29.99,
+    "total_amount": 59.98,
+    "order_status": "completed",
+    "order_date": "2024-01-17T10:30:00Z",
+    "cdc_operation": "INSERT",
+    "cdc_timestamp": "2024-01-17T10:30:15Z"
+  },
+  {
+    "order_key": "ORD-2024-001235",
+    "customer_id": "CUST-790",
+    "product_id": "PROD-457",
+    "quantity": 1,
+    "unit_price": 89.99,
+    "total_amount": 89.99,
+    "order_status": "pending",
+    "order_date": "2024-01-17T11:15:00Z",
+    "cdc_operation": "INSERT",
+    "cdc_timestamp": "2024-01-17T11:15:12Z"
+  },
+  {
+    "order_key": "ORD-2024-001236",
+    "customer_id": "CUST-791",
+    "product_id": "PROD-458",
+    "quantity": 3,
+    "unit_price": 19.99,
+    "total_amount": 59.97,
+    "order_status": "shipped",
+    "order_date": "2024-01-17T12:45:00Z",
+    "cdc_operation": "INSERT",
+    "cdc_timestamp": "2024-01-17T12:45:08Z"
+  },
+  {
+    "order_key": "ORD-2024-001237",
+    "customer_id": "CUST-792",
+    "product_id": "PROD-459",
+    "quantity": 1,
+    "unit_price": 149.99,
+    "total_amount": 149.99,
+    "order_status": "completed",
+    "order_date": "2024-01-17T14:20:00Z",
+    "cdc_operation": "INSERT",
+    "cdc_timestamp": "2024-01-17T14:20:25Z"
+  },
+  {
+    "order_key": "ORD-2024-001238",
+    "customer_id": "CUST-793",
+    "product_id": "PROD-460",
+    "quantity": 2,
+    "unit_price": 34.99,
+    "total_amount": 69.98,
+    "order_status": "processing",
+    "order_date": "2024-01-17T15:10:00Z",
+    "cdc_operation": "INSERT",
+    "cdc_timestamp": "2024-01-17T15:10:18Z"
+  }
+]

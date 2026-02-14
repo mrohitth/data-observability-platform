@@ -65,7 +65,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD python -c "import sys; sys.exit(0)" || exit 1
 
 # Default command
-CMD ["python", "src/production_orchestrator.py"]
+CMD ["python", "src/production_observability_engine.py"]
 
 # Labels
 LABEL maintainer="Data Observability Team <team@dataobservability.com>" \

@@ -1,0 +1,4 @@
+alert_id,alert_type,severity,description,source_database,table_name,timestamp,z_score,current_value,expected_range
+ALT-001,VOLUME_ANOMALY,CRITICAL,Daily order volume dropped by 4.2 standard deviations,batch_analytics_db,fact_orders,2024-01-17 09:15:30 UTC,-4.2,342,"1,150-1,350"
+ALT-002,FRESHNESS_ANOMALY,WARNING,CDC data flow is 45 minutes stale,cdc_history_db,dim_orders_history,2024-01-17 10:45:00 UTC,N/A,N/A,45 minutes
+ALT-003,CONTRACT_VIOLATION,CRITICAL,total_amount field contains string instead of number,cdc_history_db,dim_orders_history,2024-01-17 11:30:15 UTC,N/A,ORD-001239,N/A

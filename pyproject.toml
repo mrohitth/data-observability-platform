@@ -58,7 +58,7 @@ Repository = "https://github.com/your-org/data-observability-platform.git"
 "Bug Tracker" = "https://github.com/your-org/data-observability-platform/issues"
 
 [project.scripts]
-data-observability = "src.orchestrator:main"
+data-observability = "src.observability_engine:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
